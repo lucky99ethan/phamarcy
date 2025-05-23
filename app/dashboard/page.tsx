@@ -1,17 +1,36 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Package, ShoppingCart, Users, TrendingUp, ArrowDownRight, AlertCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useAuth } from "@/context/auth-context"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function DashboardPage() {
+  const { user, isAuthenticated } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/auth/login")
+      return
+    }
+  }, [isAuthenticated, router])
+
+  if (!isAuthenticated || !user) {
+    return null
+  }
+
   return (
     <div className="grid gap-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, Admin! Here's what's happening with your store today.</p>
+          <p className="text-muted-foreground">Welcome back, {user.name}! Here's what's happening with your store today.</p>
         </div>
         <Button>
           <ShoppingCart className="mr-2 h-4 w-4" />
