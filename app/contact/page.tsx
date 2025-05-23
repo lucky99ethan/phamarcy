@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MapPin, Phone, Mail, Clock, CheckCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { submitContactForm } from "@/lib/actions"
+import { sendContactForm } from "@/lib/utils/contact"
 
 export default function ContactPage() {
   const { toast } = useToast()
@@ -34,12 +35,13 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     try {
-      await submitContactForm(formData)
+      // Send data to backend API via utils controller
+      await sendContactForm(formData)
 
       toast({
         title: "Message sent successfully",
         description: "We'll get back to you as soon as possible.",
-        variant: "success",
+        variant: "default",
       })
 
       // Reset form

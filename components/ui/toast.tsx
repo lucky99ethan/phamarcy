@@ -103,13 +103,27 @@ ToastTitle.displayName = ToastPrimitives.Title.displayName
 const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description
-    ref={ref}
-    className={cn("text-sm opacity-90", className)}
-    {...props}
-  />
-))
+>(({ className, children, ...props }, ref) => {
+  // Always render children as string to avoid React child error
+  let safeChildren = children
+  if (typeof children === "object" && children !== null) {
+    if (Array.isArray(children)) {
+      safeChildren = children.map((c) => typeof c === "object" ? JSON.stringify(c) : String(c)).join("; ")
+    } else {
+      // Try to extract a message property if it exists, otherwise stringify
+      safeChildren = JSON.stringify(children)
+    }
+  }
+  return (
+    <ToastPrimitives.Description
+      ref={ref}
+      className={cn("text-sm opacity-90", className)}
+      {...props}
+    >
+      {safeChildren}
+    </ToastPrimitives.Description>
+  )
+})
 ToastDescription.displayName = ToastPrimitives.Description.displayName
 
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>

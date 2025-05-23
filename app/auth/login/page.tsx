@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation"
 import { Heart } from "lucide-react"
 import { Star } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { loginUser, registerUser } from "@/lib/actions"
+import { loginUserApi, registerUserApi } from "@/lib/utils/auth"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -45,31 +45,37 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
     try {
-      const result = await loginUser(loginData)
-
-      if (result.success) {
+      const response = await loginUserApi(loginData)
+      const user = response.data.user || response.data.data || response.data
+      if (user && (user.role === "customer" || user.role === "admin" || user.role === "doctor")) {
         toast({
           title: "Login successful",
-          description: `Welcome back, ${result.data.name}!`,
-          variant: "success",
+          description: `Welcome back, ${user.name || user.email}!`,
+          variant: "default",
         })
-
-        // In a real app, you would store the user in a context or cookie
-        // For now, we'll just redirect to the dashboard
-        router.push(result.data.role === "customer" ? "/" : "/dashboard")
+        // Store user in localStorage for session (simple demo, use context or cookies in real app)
+        if (typeof window !== "undefined") {
+          localStorage.setItem("user", JSON.stringify(user))
+        }
+        // Redirect based on role
+        router.push(user.role === "customer" ? "/" : "/dashboard")
       } else {
+        let errorMessage = "Login failed. Please try again."
+        if (response.data?.message) errorMessage = response.data.message
         toast({
           title: "Login failed",
-          description: result.error,
+          description: errorMessage,
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage = "Login failed. Please try again."
+      if (error?.response?.data?.message) errorMessage = error.response.data.message
+      else if (error?.message) errorMessage = error.message
       toast({
         title: "Login failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -82,9 +88,9 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const result = await registerUser(registerData)
+      const response = await registerUserApi(registerData)
 
-      if (result.success) {
+      if (response.data) {
         toast({
           title: "Registration successful",
           description: "Your account has been created. You can now log in.",
@@ -107,7 +113,7 @@ export default function LoginPage() {
       } else {
         toast({
           title: "Registration failed",
-          description: result.error,
+          description: "An unexpected error occurred. Please try again.",
           variant: "destructive",
         })
       }
