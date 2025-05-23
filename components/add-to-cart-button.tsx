@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react"
 import { useCart } from "@/context/cart-context"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/context/auth-context"
 
 interface AddToCartButtonProps {
   product: {
@@ -30,8 +31,15 @@ export default function AddToCartButton({
   const { addToCart } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const { toast } = useToast()
+  const { isAuthenticated } = useAuth()
+  const router = typeof window !== 'undefined' ? require('next/navigation').useRouter() : null;
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      if (router) router.push("/auth/login")
+      else window.location.href = "/auth/login"
+      return
+    }
     setIsAdding(true)
 
     // Add a small delay to show loading state
