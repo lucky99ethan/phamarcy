@@ -51,6 +51,7 @@ const RegisterSchema = z
     email: z.string().email({ message: "Please enter a valid email address." }),
     password: z.string().min(6, { message: "Password must be at least 6 characters." }),
     confirmPassword: z.string(),
+    role: z.enum(["customer", "doctor", "admin"]),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -132,7 +133,7 @@ export async function registerUser(formData: any) {
       name: validatedData.name,
       email: validatedData.email,
       password: validatedData.password, // In a real app, this would be hashed
-      role: "customer", // Default role for new registrations
+      role: validatedData.role,
     }
 
     // Add user to mock database

@@ -34,9 +34,18 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    // Map frontend fields to backend expected fields
+    const payload = {
+      fullName: formData.name,
+      email: formData.email,
+      phoneNumber: formData.phone,
+      subject: formData.subject,
+      message: formData.message,
+    }
+
     try {
       // Send data to backend API via utils controller
-      await sendContactForm(formData)
+      await sendContactForm(payload)
 
       toast({
         title: "Message sent successfully",

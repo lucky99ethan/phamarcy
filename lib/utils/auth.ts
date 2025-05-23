@@ -5,6 +5,7 @@ export async function registerUserApi(data: {
   email: string
   password: string
   confirmPassword: string
+  role: string
 }) {
   console.log("Registering user with data:", data)
   try {

@@ -28,6 +28,7 @@ export default function LoginPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "customer",
   })
 
   // Check if user is already logged in
@@ -44,9 +45,12 @@ export default function LoginPage() {
     setLoginData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setRegisterData((prev) => ({ ...prev, [name]: value }))
+  }
+  const handleRoleChange = (value: string) => {
+    setRegisterData((prev) => ({ ...prev, role: value }))
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -63,11 +67,12 @@ export default function LoginPage() {
         toast({
           title: "Login successful",
           description: `Welcome back, ${user.name || user.email}!`,
-          variant: "success",
+          variant: "default",
         })
         
         // Redirect based on role
-        router.push(user.role === "customer" ? "/" : "/dashboard")
+        // router.push(user.role === "customer" ? "/" : "/dashboard")
+        window.location.href = user.role === "customer" ? "/" : "/dashboard"
       } else {
         toast({
           title: "Login failed",
@@ -116,7 +121,7 @@ export default function LoginPage() {
         toast({
           title: "Registration successful",
           description: "Your account has been created. You can now log in.",
-          variant: "success",
+          variant: "default",
         })
 
         // Switch to login tab
@@ -131,6 +136,7 @@ export default function LoginPage() {
           email: "",
           password: "",
           confirmPassword: "",
+          role: "customer",
         })
       }
     } catch (error: any) {
@@ -265,6 +271,22 @@ export default function LoginPage() {
                       onChange={handleRegisterChange}
                     />
                   </div>
+                        <div className="grid gap-2">
+                    <Label htmlFor="role">Role</Label>
+                    <select
+                      id="role"
+                      name="role"
+                      value={registerData.role}
+                      onChange={handleRegisterChange}
+                      disabled={isLoading}
+                      required
+                      className="block w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-primary shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value="customer">Customer</option>
+                      <option value="doctor">Doctor</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
                   <div className="grid gap-2">
                     <Label htmlFor="password">Password</Label>
                     <Input
@@ -279,6 +301,7 @@ export default function LoginPage() {
                       onChange={handleRegisterChange}
                     />
                   </div>
+            
                   <div className="grid gap-2">
                     <Label htmlFor="confirm-password">Confirm Password</Label>
                     <Input
