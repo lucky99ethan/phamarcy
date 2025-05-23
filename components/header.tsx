@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Heart, Menu, Phone } from "lucide-react"
+import { Heart, Menu, Phone, X, User, LogOut, Settings, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "./mode-toggle"
 import CartDropdown from "./cart-dropdown"
@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const { user, logout, isAuthenticated } = useAuth()
 
   const routes = [
@@ -32,6 +33,28 @@ export default function Header() {
     { href: "/contact", label: "Contact" },
   ]
 
+  useEffect(() => {
+    // Check if user is logged in
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      // Assuming the user data is stored in localStorage
+      // You might want to implement a more secure way to handle this
+      // For example, using a state management library like Redux or Zustand
+      // or a backend session to handle user authentication
+      // Here, we'll just use localStorage for simplicity
+      // You should replace this with a more secure method in a production environment
+      // For example, using a state management library like Redux or Zustand
+      // or a backend session to handle user authentication
+      // Here, we'll just use localStorage for simplicity
+      // You should replace this with a more secure method in a production environment
+    }
+  }, [])
+
+  const handleLogout = () => {
+    logout()
+    router.push("/")
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -39,7 +62,7 @@ export default function Header() {
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-                <Menu className="h-5 w-5" />
+                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
@@ -109,16 +132,26 @@ export default function Header() {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="h-10 w-10 cursor-pointer">
-                  <AvatarFallback className="bg-primary/10 text-primary font-bold text-lg">
-                    {user?.name?.charAt(0)?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <Button variant="outline" className="relative h-10 w-10 rounded-full overflow-hidden">
+                  {user?.avatar ? (
+                    <div 
+                      className="h-full w-full flex items-center justify-center text-white font-medium"
+                      style={{ backgroundColor: user.avatar.color }}
+                    >
+                      {user.avatar.initials}
+                    </div>
+                  ) : (
+                    <User className="h-5 w-5" />
+                  )}
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center gap-2 p-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                    {user?.name.charAt(0).toUpperCase()}
+                  <div 
+                    className="flex h-10 w-10 items-center justify-center rounded-full text-white font-medium"
+                    style={{ backgroundColor: user?.avatar?.color || '#666' }}
+                  >
+                    {user?.avatar?.initials || user?.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="grid gap-0.5 text-sm">
                     <div className="font-medium">{user?.name}</div>
@@ -126,19 +159,26 @@ export default function Header() {
                   </div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/account/profile">My Profile</Link>
+                <DropdownMenuItem onClick={() => router.push("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/account/orders">My Orders</Link>
+                <DropdownMenuItem onClick={() => router.push("/orders")}>
+                  <Package className="mr-2 h-4 w-4" />
+                  Orders
                 </DropdownMenuItem>
-                {user?.role !== "customer" && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard">Dashboard</Link>
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -150,6 +190,34 @@ export default function Header() {
           )}
         </div>
       </div>
+      {isMenuOpen && (
+        <div className="md:hidden">
+          <nav className="container flex flex-col gap-4 py-4">
+            {routes.map((route) => (
+              <Link
+                key={route.href}
+                href={route.href}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === route.href ? "text-primary" : "text-muted-foreground",
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {route.label}
+              </Link>
+            ))}
+            {isAuthenticated && user?.role !== "customer" && (
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }

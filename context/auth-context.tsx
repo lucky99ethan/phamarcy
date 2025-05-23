@@ -10,6 +10,10 @@ type User = {
   name: string
   email: string
   role: "admin" | "doctor" | "customer"
+  avatar?: {
+    initials: string
+    color: string
+  }
 }
 
 type AuthContextType = {
@@ -33,9 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // In a real app, you would check session/token validity here
         const storedUser = localStorage.getItem("user")
-
         if (storedUser) {
           setUser(JSON.parse(storedUser))
         }
@@ -55,23 +57,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const result = await loginUser({ email, password })
 
-      if (result.success) {
-        setUser(result.data as User)
+      if (result.success && result.data) {
+        // Create avatar with initials and random color
+        const initials = result.data.name.split(' ').map(n => n[0]).join('').toUpperCase()
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB']
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        
+        const userData: User = {
+          id: result.data.id,
+          name: result.data.name,
+          email: result.data.email,
+          role: result.data.role as "admin" | "doctor" | "customer",
+          avatar: {
+            initials,
+            color: randomColor
+          }
+        }
 
-        // Store user in localStorage (in a real app, you'd use secure cookies/session)
-        localStorage.setItem("user", JSON.stringify(result.data))
+        // Update state and localStorage
+        setUser(userData)
+        localStorage.setItem("user", JSON.stringify(userData))
 
         toast({
           title: "Login successful",
           description: `Welcome back, ${result.data.name}!`,
-          variant: "success",
+          variant: "default",
         })
 
         return true
       } else {
         toast({
           title: "Login failed",
-          description: result.error,
+          description: typeof result.error === 'string' ? result.error : 'Login failed. Please try again.',
           variant: "destructive",
         })
 
@@ -97,17 +114,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await registerUser({ name, email, password, confirmPassword: password })
 
       if (result.success) {
+        // Create avatar with initials and random color
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase()
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB']
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        
+        const userData = {
+          ...result.data,
+          avatar: {
+            initials,
+            color: randomColor
+          }
+        }
+
+        // Store user in localStorage with avatar
+        localStorage.setItem("user", JSON.stringify(userData))
+        setUser(userData as User)
+
         toast({
           title: "Registration successful",
           description: "Your account has been created. You can now log in.",
-          variant: "success",
+          variant: "default",
         })
 
         return true
       } else {
         toast({
           title: "Registration failed",
-          description: result.error,
+          description: typeof result.error === 'string' ? result.error : 'Registration failed. Please try again.',
           variant: "destructive",
         })
 

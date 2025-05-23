@@ -29,36 +29,51 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    try {
-      await registerUserApi(formData)
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Registration successful",
-        description: "You can now log in.",
-        variant: "default",
+        title: "Validation Error",
+        description: "Passwords do not match",
+        variant: "destructive",
       })
-      router.push("/auth/login")
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      const response = await registerUserApi(formData)
+      
+      if (response.data) {
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created. Redirecting to login...",
+          variant: "success",
+        })
+        
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          role: "customer",
+        })
+        
+        // Redirect to login page
+        router.push("/auth/login")
+      }
     } catch (error: any) {
       let errorMessage = "Registration failed. Please try again."
-      const extractMessage = (err: any): string => {
-        if (!err) return errorMessage
-        if (typeof err === "string") return err
-        if (Array.isArray(err)) return err.map(extractMessage).join("; ")
-        if (typeof err.message === "string") return err.message
-        if (typeof err === "object") {
-          // Try to join all string values in the object
-          return Object.values(err).map(extractMessage).join("; ")
-        }
-        return JSON.stringify(err)
-      }
+      
       if (error?.response?.data?.message) {
-        errorMessage = extractMessage(error.response.data.message)
+        errorMessage = error.response.data.message
       } else if (error?.response?.data?.error) {
-        errorMessage = extractMessage(error.response.data.error)
-      } else if (error?.response?.data) {
-        errorMessage = extractMessage(error.response.data)
+        errorMessage = error.response.data.error
       } else if (error?.message) {
-        errorMessage = extractMessage(error.message)
+        errorMessage = error.message
       }
+      
       toast({
         title: "Registration failed",
         description: errorMessage,
@@ -86,6 +101,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                minLength={2}
               />
             </div>
             <div className="grid gap-2">
@@ -110,6 +126,7 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                minLength={6}
               />
             </div>
             <div className="grid gap-2">
@@ -122,6 +139,7 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
+                minLength={6}
               />
             </div>
             <div className="grid gap-2">

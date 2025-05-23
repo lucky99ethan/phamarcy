@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -32,6 +30,15 @@ export default function LoginPage() {
     confirmPassword: "",
   })
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      const user = JSON.parse(storedUser)
+      router.push(user.role === "customer" ? "/" : "/dashboard")
+    }
+  }, [router])
+
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setLoginData((prev) => ({ ...prev, [name]: value }))
@@ -48,31 +55,35 @@ export default function LoginPage() {
     try {
       const response = await loginUserApi(loginData)
       const user = response.data.user || response.data.data || response.data
+      
       if (user && (user.role === "customer" || user.role === "admin" || user.role === "doctor")) {
+        // Store user in localStorage
+        localStorage.setItem("user", JSON.stringify(user))
+        
         toast({
           title: "Login successful",
           description: `Welcome back, ${user.name || user.email}!`,
-          variant: "default",
+          variant: "success",
         })
-        // Store user in localStorage for session (simple demo, use context or cookies in real app)
-        if (typeof window !== "undefined") {
-          localStorage.setItem("user", JSON.stringify(user))
-        }
+        
         // Redirect based on role
         router.push(user.role === "customer" ? "/" : "/dashboard")
       } else {
-        let errorMessage = "Login failed. Please try again."
-        if (response.data?.message) errorMessage = response.data.message
         toast({
           title: "Login failed",
-          description: errorMessage,
+          description: "Invalid credentials or account not found",
           variant: "destructive",
         })
       }
     } catch (error: any) {
       let errorMessage = "Login failed. Please try again."
-      if (error?.response?.data?.message) errorMessage = error.response.data.message
-      else if (error?.message) errorMessage = error.message
+      
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message
+      } else if (error?.message) {
+        errorMessage = error.message
+      }
+      
       toast({
         title: "Login failed",
         description: errorMessage,
@@ -86,6 +97,17 @@ export default function LoginPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+
+    // Validate passwords match
+    if (registerData.password !== registerData.confirmPassword) {
+      toast({
+        title: "Validation Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      })
+      setIsLoading(false)
+      return
+    }
 
     try {
       const response = await registerUserApi(registerData)
@@ -110,17 +132,21 @@ export default function LoginPage() {
           password: "",
           confirmPassword: "",
         })
-      } else {
-        toast({
-          title: "Registration failed",
-          description: "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        })
       }
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage = "Registration failed. Please try again."
+      
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message
+      } else if (error?.response?.data?.error) {
+        errorMessage = error.response.data.error
+      } else if (error?.message) {
+        errorMessage = error.message
+      }
+      
       toast({
         title: "Registration failed",
-        description: "An unexpected error occurred. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -178,6 +204,7 @@ export default function LoginPage() {
                       autoComplete="current-password"
                       disabled={isLoading}
                       required
+                      minLength={6}
                       value={loginData.password}
                       onChange={handleLoginChange}
                     />
@@ -217,6 +244,7 @@ export default function LoginPage() {
                       placeholder="John Doe"
                       disabled={isLoading}
                       required
+                      minLength={2}
                       value={registerData.name}
                       onChange={handleRegisterChange}
                     />
@@ -246,6 +274,7 @@ export default function LoginPage() {
                       autoCapitalize="none"
                       disabled={isLoading}
                       required
+                      minLength={6}
                       value={registerData.password}
                       onChange={handleRegisterChange}
                     />
@@ -259,6 +288,7 @@ export default function LoginPage() {
                       autoCapitalize="none"
                       disabled={isLoading}
                       required
+                      minLength={6}
                       value={registerData.confirmPassword}
                       onChange={handleRegisterChange}
                     />
