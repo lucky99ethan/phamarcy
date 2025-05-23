@@ -17,7 +17,7 @@ export default function MedicineListPage() {
       description: "For relief of mild pain and fever",
       price: 5.99,
       discountPrice: 4.99,
-      image: "/placeholder.svg?height=200&width=200",
+      image: "/images/paracetamol.jpg",
       prescription: false,
     },
     {

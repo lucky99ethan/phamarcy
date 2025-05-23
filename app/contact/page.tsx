@@ -64,21 +64,28 @@ export default function ContactPage() {
   return (
     <div className="container py-8 md:py-12">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Contact Us</h1>
-        <p className="mx-auto mt-4 max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-          We're here to help. Reach out to us with any questions or concerns.
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-primary drop-shadow-lg">
+          Contact Us
+        </h1>
+        <p className="mx-auto mt-4 max-w-[700px] text-lg text-muted-foreground md:text-xl/relaxed">
+          Welcome to MediStore! We are here to help you. Please contact us with any questions or feedback about our
+          services.
         </p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-12 lg:grid-cols-2">
+        {/* Contact Form Card */}
         <div>
-          <Card>
+          <Card className="shadow-2xl border-0 bg-gradient-to-br from-white via-blue-50 to-blue-100">
             <CardHeader>
-              <CardTitle>Send us a message</CardTitle>
-              <CardDescription>Fill out the form below and we'll get back to you as soon as possible.</CardDescription>
+              <CardTitle className="text-2xl text-primary">Send a Message</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Fill out the form below and we will get back to you as soon as possible.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="grid gap-4">
+                {/* ...existing code for form fields... */}
                 <div className="grid gap-2">
                   <Label htmlFor="name">Full Name</Label>
                   <Input
@@ -97,7 +104,7 @@ export default function ContactPage() {
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="john.doe@example.com"
+                      placeholder="john@email.com"
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -109,7 +116,7 @@ export default function ContactPage() {
                       id="phone"
                       name="phone"
                       type="tel"
-                      placeholder="(123) 456-7890"
+                      placeholder="0712 345 678"
                       value={formData.phone}
                       onChange={handleChange}
                     />
@@ -131,14 +138,18 @@ export default function ContactPage() {
                   <Textarea
                     id="message"
                     name="message"
-                    placeholder="Please provide details about your inquiry..."
+                    placeholder="Write your message here..."
                     rows={5}
                     value={formData.message}
                     onChange={handleChange}
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full bg-primary text-white text-lg font-bold py-3 rounded-xl shadow-lg hover:bg-primary/90 transition"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
@@ -146,11 +157,14 @@ export default function ContactPage() {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card>
+        {/* Contact Info & Map */}
+        <div className="space-y-8">
+          <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-50 via-white to-blue-100">
             <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-              <CardDescription>Reach out to us directly through any of the following channels.</CardDescription>
+              <CardTitle className="text-xl text-primary">Contact Information</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Reach out to us directly through any of the following channels.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-start gap-3">
@@ -159,7 +173,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-medium">Address</h3>
-                  <p className="text-muted-foreground">123 Medical Avenue, Healthcare City, State 12345</p>
+                  <p className="text-muted-foreground">Masaki, Dar es Salaam, Tanzania</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -168,8 +182,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-medium">Phone</h3>
-                  <p className="text-muted-foreground">Customer Service: (123) 456-7890</p>
-                  <p className="text-muted-foreground">Pharmacy Direct: (123) 456-7891</p>
+                  <p className="text-muted-foreground">Customer Service: +255 712 345 678</p>
+                  <p className="text-muted-foreground">Main Store: +255 713 456 789</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -178,8 +192,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-medium">Email</h3>
-                  <p className="text-muted-foreground">General Inquiries: info@medistore.com</p>
-                  <p className="text-muted-foreground">Customer Support: support@medistore.com</p>
+                  <p className="text-muted-foreground">info@medistore.co.tz</p>
+                  <p className="text-muted-foreground">support@medistore.co.tz</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -195,86 +209,44 @@ export default function ContactPage() {
               </div>
             </CardContent>
           </Card>
-
-          <Card>
+          <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-50 via-white to-blue-100">
             <CardHeader>
-              <CardTitle>Store Locations</CardTitle>
+              <CardTitle className="text-xl text-primary">Our Location (Masaki, Dar es Salaam)</CardTitle>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="main">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="main">Main Store</TabsTrigger>
-                  <TabsTrigger value="north">North Branch</TabsTrigger>
-                  <TabsTrigger value="east">East Branch</TabsTrigger>
-                </TabsList>
-                <TabsContent value="main" className="mt-4">
-                  <div className="aspect-video overflow-hidden rounded-md border">
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2219901290355!2d-74.00369368400567!3d40.71312937933185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a23e28c1191%3A0x49f75d3281df052a!2s123%20Broadway%2C%20New%20York%2C%20NY%2010007%2C%20USA!5e0!3m2!1sen!2sus!4v1652813115288!5m2!1sen!2sus"
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                  </div>
-                  <div className="mt-2">
-                    <p className="font-medium">MediStore Main Branch</p>
-                    <p className="text-sm text-muted-foreground">123 Medical Avenue, Healthcare City, State 12345</p>
-                  </div>
-                </TabsContent>
-                <TabsContent value="north" className="mt-4">
-                  <div className="aspect-video overflow-hidden rounded-md border">
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9663095343016!2d-74.04323708400485!3d40.74076737932919!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259af44f80507%3A0xca62cc0665f68640!2s456%20Main%20St%2C%20New%20York%2C%20NY%2010044%2C%20USA!5e0!3m2!1sen!2sus!4v1652813115288!5m2!1sen!2sus"
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                  </div>
-                  <div className="mt-2">
-                    <p className="font-medium">MediStore North Branch</p>
-                    <p className="text-sm text-muted-foreground">456 North Street, Uptown District, State 12345</p>
-                  </div>
-                </TabsContent>
-                <TabsContent value="east" className="mt-4">
-                  <div className="aspect-video overflow-hidden rounded-md border">
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.9126654996037!2d-73.95583428400552!3d40.71933937933132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25c2f476a5ef9%3A0x3b8ee6d435a7f3d0!2s789%20East%20St%2C%20Brooklyn%2C%20NY%2011211%2C%20USA!5e0!3m2!1sen!2sus!4v1652813115288!5m2!1sen!2sus"
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                  </div>
-                  <div className="mt-2">
-                    <p className="font-medium">MediStore East Branch</p>
-                    <p className="text-sm text-muted-foreground">789 East Boulevard, Riverside Area, State 12345</p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <div className="aspect-video overflow-hidden rounded-xl border-2 border-primary shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.017073289889!2d39.24943431477244!3d-6.747233667857998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c4c7e2e2e2e2b%3A0x7e2e2e2e2e2e2e2e!2sMasaki%2C%20Dar%20es%20Salaam%2C%20Tanzania!5e0!3m2!1sen!2stz!4v1716460000000!5m2!1sen!2stz"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+              <div className="mt-2">
+                <p className="font-medium">MediStore Masaki</p>
+                <p className="text-sm text-muted-foreground">Masaki, Dar es Salaam, Tanzania</p>
+              </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* FAQ Section */}
-      <div className="mt-12">
-        <h2 className="mb-6 text-2xl font-bold tracking-tight">Frequently Asked Questions</h2>
-        <div className="grid gap-4 md:grid-cols-2">
+      <div className="mt-16">
+        <h2 className="mb-6 text-3xl font-extrabold tracking-tight text-primary">
+          Frequently Asked Questions
+        </h2>
+        <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">How can I track my order?</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Once your order is confirmed, you'll receive a tracking link via SMS and email. You can also track your
+                Once your order is confirmed, you will receive a tracking link via SMS and email. You can also track your
                 order in real-time through your account dashboard.
               </p>
             </CardContent>
@@ -285,7 +257,7 @@ export default function ContactPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Currently, we only offer shipping within the country. We're working on expanding our services
+                Currently, we only offer shipping within Tanzania. We are working on expanding our services
                 internationally and will update our customers when this becomes available.
               </p>
             </CardContent>
@@ -307,7 +279,7 @@ export default function ContactPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                You can change or cancel your order within 30 minutes of placing it, provided it hasn't been dispatched
+                You can change or cancel your order within 30 minutes of placing it, provided it has not been dispatched
                 yet. Please contact our customer service team immediately for assistance.
               </p>
             </CardContent>
@@ -316,18 +288,20 @@ export default function ContactPage() {
       </div>
 
       {/* Newsletter Signup */}
-      <div className="mt-12 rounded-lg bg-primary p-8 text-primary-foreground">
+      <div className="mt-16 rounded-3xl bg-gradient-to-br from-primary to-blue-400 p-10 text-white shadow-2xl">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-2 text-2xl font-bold">Stay Updated</h2>
-          <p className="mb-6">
+          <h2 className="mb-2 text-3xl font-extrabold">Stay Updated</h2>
+          <p className="mb-6 text-lg">
             Subscribe to our newsletter to receive updates on new products, special offers, and health tips.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Input type="email" placeholder="Enter your email" className="bg-primary-foreground text-primary" />
-            <Button variant="secondary">Subscribe</Button>
+            <Input type="email" placeholder="Enter your email" className="bg-white text-primary" />
+            <Button variant="secondary" className="font-bold">
+              Subscribe
+            </Button>
           </div>
           <div className="mt-4 flex items-center justify-center gap-2 text-sm">
-            <CheckCircle className="h-4 w-4" />
+            <CheckCircle className="h-4 w-4 text-green-300" />
             <span>We respect your privacy and will never share your information.</span>
           </div>
         </div>

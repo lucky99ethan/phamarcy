@@ -18,17 +18,19 @@ import Link from "next/link"
 
 export default function ServicesPage() {
   return (
-    <div className="container py-8 md:py-12">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Our Services</h1>
-        <p className="mx-auto mt-4 max-w-[700px] text-muted-foreground md:text-xl/relaxed">
+    <div className="container py-12 md:py-20">
+      <div className="mb-12 text-center">
+        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-primary drop-shadow-lg animate-fade-in-up">
+          Our Services
+        </h1>
+        <p className="mx-auto mt-6 max-w-[700px] text-lg md:text-2xl text-muted-foreground animate-fade-in delay-100">
           Comprehensive healthcare services to meet all your medical needs in one place.
         </p>
       </div>
 
       {/* Services Tabs */}
-      <Tabs defaultValue="all" className="mb-12">
-        <TabsList className="mb-8 w-full justify-start overflow-auto">
+      <Tabs defaultValue="all" className="mb-16 animate-fade-in-up delay-200">
+        <TabsList className="mb-10 w-full justify-center overflow-auto rounded-xl bg-gradient-to-r from-blue-100 via-white to-blue-100 shadow-lg animate-fade-in-up animate-delay-200">
           <TabsTrigger value="all">All Services</TabsTrigger>
           <TabsTrigger value="prescription">Prescription</TabsTrigger>
           <TabsTrigger value="consultation">Consultation</TabsTrigger>
@@ -36,9 +38,11 @@ export default function ServicesPage() {
           <TabsTrigger value="health-products">Health Products</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Prescription Service */}
-            <Card className="flex flex-col">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Animated Service Cards */}
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              {/* Animated Glow */}
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-blue-300 opacity-20 rounded-full blur-2xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
@@ -82,7 +86,8 @@ export default function ServicesPage() {
             </Card>
 
             {/* Online Consultation */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-300 opacity-20 rounded-full blur-2xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
@@ -125,7 +130,8 @@ export default function ServicesPage() {
             </Card>
 
             {/* Lab Tests */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-yellow-200 opacity-10 rounded-full blur-2xl group-hover:scale-110 group-hover:opacity-30 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
@@ -166,11 +172,13 @@ export default function ServicesPage() {
             </Card>
 
             {/* Health Products */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-300 opacity-20 rounded-full blur-2xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
                     <ShoppingBag className="h-6 w-6 text-primary" />
+               
                   </div>
                 </div>
                 <CardTitle className="mt-4">Health Products</CardTitle>
@@ -207,7 +215,8 @@ export default function ServicesPage() {
             </Card>
 
             {/* Health Packages */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-300 opacity-20 rounded-full blur-2xl group-hover:scale-125 group-hover:opacity-40 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
@@ -251,7 +260,8 @@ export default function ServicesPage() {
             </Card>
 
             {/* Medication Reminder */}
-            <Card className="flex flex-col">
+            <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100 animate-fade-in-up group relative overflow-hidden">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-red-200 opacity-10 rounded-full blur-2xl group-hover:scale-110 group-hover:opacity-30 transition-all duration-500 z-0" />
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="rounded-full bg-primary/10 p-2">
@@ -354,7 +364,7 @@ export default function ServicesPage() {
             </div>
             <div className="flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/images/prescription.jpg"
                 alt="Prescription service"
                 width={400}
                 height={400}
@@ -423,7 +433,7 @@ export default function ServicesPage() {
             </div>
             <div className="flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/images/consultation.jpeg"
                 alt="Online consultation"
                 width={400}
                 height={400}
@@ -492,10 +502,10 @@ export default function ServicesPage() {
             </div>
             <div className="flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/images/labTest.jpg"
                 alt="Lab tests"
-                width={400}
-                height={400}
+                width={500}
+                height={500}
                 className="rounded-lg object-cover"
               />
             </div>
@@ -561,7 +571,7 @@ export default function ServicesPage() {
             </div>
             <div className="flex items-center justify-center">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/images/products.jpg"
                 alt="Health products"
                 width={400}
                 height={400}
@@ -573,10 +583,12 @@ export default function ServicesPage() {
       </Tabs>
 
       {/* Why Choose Our Services */}
-      <div className="mb-12">
-        <h2 className="mb-6 text-2xl font-bold tracking-tight text-center">Why Choose Our Services</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
+      <div className="mb-16">
+        <h2 className="mb-8 text-3xl md:text-4xl font-extrabold tracking-tight text-center text-primary animate-fade-in-up">
+          Why Choose Our Services
+        </h2>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-4 rounded-full bg-primary/10 p-3">
@@ -589,7 +601,7 @@ export default function ServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-4 rounded-full bg-primary/10 p-3">
@@ -602,7 +614,7 @@ export default function ServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-4 rounded-full bg-primary/10 p-3">
@@ -615,7 +627,7 @@ export default function ServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="flex flex-col shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300 bg-gradient-to-br from-white via-blue-50 to-blue-100">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-4 rounded-full bg-primary/10 p-3">
@@ -632,32 +644,34 @@ export default function ServicesPage() {
       </div>
 
       {/* Call to Action */}
-      <div className="rounded-lg bg-primary p-8 text-primary-foreground">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-4">
-            <h2 className="text-3xl font-bold tracking-tight">Ready to get started?</h2>
-            <p className="text-primary-foreground/90">
+      <div className="rounded-3xl bg-gradient-to-br from-primary to-blue-400 p-12 text-white shadow-2xl mt-16 animate-fade-in-up">
+        <div className="grid gap-10 md:grid-cols-2 items-center">
+          <div className="space-y-6">
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg">
+              Ready to get started?
+            </h2>
+            <p className="text-lg md:text-xl text-white/90">
               Sign up now to access all our healthcare services and products. Get exclusive offers and discounts on your
               first order.
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button variant="secondary">Sign Up Now</Button>
-              <Button
-                variant="outline"
-                className="bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
-              >
-                Learn More
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Button variant="secondary" className="text-lg px-8 py-3 rounded-xl shadow-md hover:scale-105 transition-transform" asChild>
+                <Link href="/auth/login">Sign Up Now</Link>
               </Button>
+
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <Image
-              src="/placeholder.svg?height=200&width=300"
-              alt="Healthcare services"
-              width={300}
-              height={200}
-              className="rounded-lg object-cover"
-            />
+          <div className="flex items-center justify-center relative">
+            <div className="absolute inset-0 m-auto w-72 h-72 rounded-full bg-gradient-to-tr from-pink-300 via-blue-200 to-purple-200 blur-2xl opacity-60 animate-pulse-slow z-0" />
+            <div className="relative w-64 h-64 rounded-3xl shadow-2xl overflow-hidden z-10 flex items-center justify-center bg-white/90">
+              <Image
+                src="/images/doctor.jpg"
+                alt="Healthcare services"
+                width={300}
+                height={300}
+                className="object-cover w-full h-full scale-110 hover:scale-125 transition-transform duration-700 ease-in-out drop-shadow-2xl animate-fade-in"
+              />
+            </div>
           </div>
         </div>
       </div>
