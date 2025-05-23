@@ -124,9 +124,9 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center mr-2">
             <Phone className="h-4 w-4 mr-2 text-primary" />
-            <span className="text-sm">(123) 456-7890</span>
+            <span className="text-sm">+255677927107</span>
           </div>
-          <CartDropdown />
+          {isAuthenticated && <CartDropdown />}
           <ModeToggle />
 
           {isAuthenticated ? (
