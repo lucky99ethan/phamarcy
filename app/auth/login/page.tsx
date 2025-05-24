@@ -71,8 +71,7 @@ export default function LoginPage() {
         })
         
         // Redirect based on role
-        // router.push(user.role === "customer" ? "/" : "/dashboard")
-        window.location.href = user.role === "customer" ? "/" : "/dashboard"
+        window.location.href = user.role === "admin" ? "/admin" : (user.role === "customer" ? "/" : "/dashboard")
       } else {
         toast({
           title: "Login failed",

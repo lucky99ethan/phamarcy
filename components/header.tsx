@@ -87,7 +87,7 @@ export default function Header() {
                 ))}
                 {isAuthenticated && user?.role !== "customer" && (
                   <Link
-                    href="/dashboard"
+                    href="/admin"
                     className="flex items-center text-lg font-medium hover:text-primary"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -116,7 +116,7 @@ export default function Header() {
             </Link>
           ))}
           {isAuthenticated && user?.role !== "customer" && (
-            <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link href="/admin" className="text-sm font-medium transition-colors hover:text-primary">
               Dashboard
             </Link>
           )}
@@ -188,21 +188,7 @@ export default function Header() {
               </Button>
             </Link>
           )}
-          {isAuthenticated && user?.role === "admin" && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="hidden md:inline-flex">
-                  Admin
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => router.push("/dashboard")}>Dashboard</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/dashboard/inventory")}>Manage Inventory</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/dashboard/stock")}>Manage Stock</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/dashboard/users")}>Manage Users</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+ 
         </div>
       </div>
       {isMenuOpen && (
