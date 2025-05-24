@@ -19,9 +19,13 @@ export default function DashboardPage() {
       router.replace("/auth/login")
       return
     }
-  }, [isAuthenticated, router])
+    if (user && user.role === "admin") {
+      router.replace("/admin")
+      return
+    }
+  }, [isAuthenticated, router, user])
 
-  if (!isAuthenticated || !user) {
+  if (!isAuthenticated || !user || user.role === "admin") {
     return null
   }
 
@@ -47,8 +51,8 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">$45,231.89</div>
             <div className="flex items-center text-sm text-muted-foreground">
-              <TrendingUp className="mr-1 h-4 w-4 text-success" />
-              <span className="text-success">+20.1%</span> from last month
+              <TrendingUp className="mr-1 h-4 w-4 text-green-500" />
+              <span className="text-green-500">+20.1%</span> from last month
             </div>
           </CardContent>
         </Card>
@@ -60,8 +64,8 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">+2350</div>
             <div className="flex items-center text-sm text-muted-foreground">
-              <TrendingUp className="mr-1 h-4 w-4 text-success" />
-              <span className="text-success">+12.2%</span> from last month
+              <TrendingUp className="mr-1 h-4 w-4 text-green-500" />
+              <span className="text-green-500">+12.2%</span> from last month
             </div>
           </CardContent>
         </Card>
@@ -73,8 +77,8 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">+12,234</div>
             <div className="flex items-center text-sm text-muted-foreground">
-              <TrendingUp className="mr-1 h-4 w-4 text-success" />
-              <span className="text-success">+3.1%</span> from last month
+              <TrendingUp className="mr-1 h-4 w-4 text-green-500" />
+              <span className="text-green-500">+3.1%</span> from last month
             </div>
           </CardContent>
         </Card>
@@ -86,8 +90,8 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">24</div>
             <div className="flex items-center text-sm text-muted-foreground">
-              <ArrowDownRight className="mr-1 h-4 w-4 text-destructive" />
-              <span className="text-destructive">+8</span> from last week
+              <ArrowDownRight className="mr-1 h-4 w-4 text-red-500" />
+              <span className="text-red-500">+8</span> from last week
             </div>
           </CardContent>
         </Card>
@@ -161,12 +165,12 @@ export default function DashboardPage() {
                       <TableCell>{order.date}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
+                          className={
                             order.status === "Delivered"
-                              ? "success"
+                              ? "bg-green-500 text-white"
                               : order.status === "Shipped"
-                                ? "default"
-                                : "outline"
+                                ? "bg-gray-300 text-gray-800"
+                                : "bg-yellow-400 text-gray-900"
                           }
                         >
                           {order.status}
@@ -248,12 +252,12 @@ export default function DashboardPage() {
                       <TableCell>{request.date}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={
+                          className={
                             request.status === "Approved"
-                              ? "success"
+                              ? "bg-green-500 text-white"
                               : request.status === "Rejected"
-                                ? "destructive"
-                                : "outline"
+                                ? "bg-red-500 text-white"
+                                : "bg-yellow-400 text-gray-900"
                           }
                         >
                           {request.status}
