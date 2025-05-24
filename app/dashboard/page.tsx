@@ -346,6 +346,14 @@ export default function DashboardPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Placeholder for analytics and profit/loss graph */}
+      <div className="container py-8">
+        <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+        {/* <Chart /> */}
+        <div className="bg-muted p-4 rounded mb-4">Dashboard analytics and profit/loss graph coming soon...</div>
+        {/* Add stats cards, recent activity, etc. */}
+      </div>
     </div>
   )
 }

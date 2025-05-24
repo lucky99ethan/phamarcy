@@ -1,10 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Dialog,
   DialogContent,
@@ -168,10 +166,10 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="container py-8">
+      <h1 className="text-2xl font-bold mb-4">Manage Inventory</h1>
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Medicine Inventory</h1>
           <p className="text-muted-foreground">Manage your pharmacy's medicine stock and inventory.</p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -331,105 +329,97 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle>Medicine List</CardTitle>
-          <CardDescription>Manage and monitor your pharmacy's medicine inventory.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4 flex flex-col gap-4 md:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search medicines..."
-                className="w-full pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select defaultValue="all">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="pain-relief">Pain Relief</SelectItem>
-                  <SelectItem value="antibiotics">Antibiotics</SelectItem>
-                  <SelectItem value="allergy">Allergy</SelectItem>
-                  <SelectItem value="digestive-health">Digestive Health</SelectItem>
-                  <SelectItem value="blood-pressure">Blood Pressure</SelectItem>
-                  <SelectItem value="diabetes">Diabetes</SelectItem>
-                  <SelectItem value="cholesterol">Cholesterol</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-                <span className="sr-only">Filter</span>
-              </Button>
-            </div>
-          </div>
+      <div className="mb-4 flex flex-col gap-4 md:flex-row">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search medicines..."
+            className="w-full pl-8"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Select defaultValue="all">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="pain-relief">Pain Relief</SelectItem>
+              <SelectItem value="antibiotics">Antibiotics</SelectItem>
+              <SelectItem value="allergy">Allergy</SelectItem>
+              <SelectItem value="digestive-health">Digestive Health</SelectItem>
+              <SelectItem value="blood-pressure">Blood Pressure</SelectItem>
+              <SelectItem value="diabetes">Diabetes</SelectItem>
+              <SelectItem value="cholesterol">Cholesterol</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="icon">
+            <Filter className="h-4 w-4" />
+            <span className="sr-only">Filter</span>
+          </Button>
+        </div>
+      </div>
 
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead className="hidden md:table-cell">Description</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead className="hidden lg:table-cell">Reorder Level</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead className="hidden md:table-cell">Prescription</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredMedications.map((medication) => (
-                  <TableRow key={medication.id}>
-                    <TableCell className="font-medium">{medication.id}</TableCell>
-                    <TableCell>{medication.name}</TableCell>
-                    <TableCell>{medication.category}</TableCell>
-                    <TableCell className="hidden max-w-[200px] truncate md:table-cell">
-                      {medication.description}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          medication.stock <= medication.reorderLevel / 2
-                            ? "destructive"
-                            : medication.stock <= medication.reorderLevel
-                              ? "outline"
-                              : "default"
-                        }
-                      >
-                        {medication.stock}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">{medication.reorderLevel}</TableCell>
-                    <TableCell>${medication.price.toFixed(2)}</TableCell>
-                    <TableCell className="hidden md:table-cell">{medication.prescription ? "Yes" : "No"}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Pencil className="h-4 w-4" />
-                          <span className="sr-only">Edit</span>
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Trash2 className="h-4 w-4" />
-                          <span className="sr-only">Delete</span>
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead className="hidden md:table-cell">Description</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead className="hidden lg:table-cell">Reorder Level</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead className="hidden md:table-cell">Prescription</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredMedications.map((medication) => (
+              <TableRow key={medication.id}>
+                <TableCell className="font-medium">{medication.id}</TableCell>
+                <TableCell>{medication.name}</TableCell>
+                <TableCell>{medication.category}</TableCell>
+                <TableCell className="hidden max-w-[200px] truncate md:table-cell">
+                  {medication.description}
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      medication.stock <= medication.reorderLevel / 2
+                        ? "destructive"
+                        : medication.stock <= medication.reorderLevel
+                          ? "outline"
+                          : "default"
+                    }
+                  >
+                    {medication.stock}
+                  </Badge>
+                </TableCell>
+                <TableCell className="hidden lg:table-cell">{medication.reorderLevel}</TableCell>
+                <TableCell>${medication.price.toFixed(2)}</TableCell>
+                <TableCell className="hidden md:table-cell">{medication.prescription ? "Yes" : "No"}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Pencil className="h-4 w-4" />
+                      <span className="sr-only">Edit</span>
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Trash2 className="h-4 w-4" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
