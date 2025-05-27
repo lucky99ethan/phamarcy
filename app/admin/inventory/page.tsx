@@ -17,11 +17,11 @@ export default function AdminInventoryPage() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState({ name: "", manufacturer: "", category: "", dosage: "", quantity: 0, unit: "" });
+  const [editData, setEditData] = useState({ name: "", manufacturer: "", category: "", dosage: "", quantity: 0, unit: "", sellingPrice: 0 });
 
   // Create inventory state
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [createData, setCreateData] = useState({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '' });
+  const [createData, setCreateData] = useState({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
   const [creating, setCreating] = useState(false);
 
   // Pagination state
@@ -51,7 +51,8 @@ export default function AdminInventoryPage() {
       category: item.category,
       dosage: item.dosage,
       quantity: item.quantity,
-      unit: item.unit
+      unit: item.unit,
+      sellingPrice: item.sellingPrice
     });
     setEditMode(false);
     setModalOpen(true);
@@ -66,7 +67,8 @@ export default function AdminInventoryPage() {
       category: selectedItem.category,
       dosage: selectedItem.dosage,
       quantity: selectedItem.quantity,
-      unit: selectedItem.unit
+      unit: selectedItem.unit,
+      sellingPrice: selectedItem.sellingPrice
     });
   };
   const handleSaveEdit = async () => {
@@ -103,13 +105,13 @@ export default function AdminInventoryPage() {
   };
 
   const handleOpenCreate = () => {
-    setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '' });
+    setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
     setCreateModalOpen(true);
   };
 
   useEffect(() => {
     if (!createModalOpen) {
-      setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '' });
+      setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
     }
   }, [createModalOpen]);
 
@@ -123,7 +125,7 @@ export default function AdminInventoryPage() {
         setItems(prev => [...prev, res.data.item || dataWithId]);
         toast({ title: 'Inventory created!', variant: 'default' });
         setCreateModalOpen(false); // Close modal
-        setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '' }); // Clear form
+        setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 }); // Clear form
       } else {
         throw new Error('Create failed');
       }
@@ -171,14 +173,15 @@ export default function AdminInventoryPage() {
               <TableHead className="text-blue-700 font-bold">Dosage</TableHead>
               <TableHead className="text-blue-700 font-bold">Quantity</TableHead>
               <TableHead className="text-blue-700 font-bold">Unit</TableHead>
+              <TableHead className="text-blue-700 font-bold">Selling Price</TableHead>
               <TableHead className="text-right text-blue-700 font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={8} className="text-center py-8 text-gray-400 text-lg">Loading...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={9} className="text-center py-8 text-gray-400 text-lg">Loading...</TableCell></TableRow>
             ) : paginated.length === 0 ? (
-              <TableRow><TableCell colSpan={8} className="text-center py-8 text-gray-400 text-lg">No items found.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={9} className="text-center py-8 text-gray-400 text-lg">No items found.</TableCell></TableRow>
             ) : (
               paginated.map((item, idx) => (
                 <TableRow key={item._id || item.id || idx} className="hover:bg-blue-50/60 transition group">
@@ -189,6 +192,7 @@ export default function AdminInventoryPage() {
                   <TableCell className="text-gray-600">{item.dosage}</TableCell>
                   <TableCell className="text-gray-600">{item.quantity}</TableCell>
                   <TableCell className="text-gray-600">{item.unit}</TableCell>
+                  <TableCell className="text-gray-600">{item.sellingPrice}</TableCell>
                   <TableCell className="text-right">
                     <Button size="sm" variant="outline" className="mr-2 border-blue-200 group-hover:border-blue-400" onClick={() => handleReview(item)}>Review</Button>
                   </TableCell>
@@ -229,17 +233,18 @@ export default function AdminInventoryPage() {
             </DialogTitle>
           </DialogHeader>
           {selectedItem && !editMode && (
-            <div className="space-y-2 py-2">
-              <div><span className="font-semibold">Name:</span> {selectedItem.name}</div>
-              <div><span className="font-semibold">Manufacturer:</span> {selectedItem.manufacturer}</div>
-              <div><span className="font-semibold">Category:</span> {selectedItem.category}</div>
-              <div><span className="font-semibold">Dosage:</span> {selectedItem.dosage}</div>
-              <div><span className="font-semibold">Quantity:</span> {selectedItem.quantity}</div>
-              <div><span className="font-semibold">Unit:</span> {selectedItem.unit}</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+              <div><span className="font-semibold">Name</span> <br/> {selectedItem.name}</div>
+              <div><span className="font-semibold">Manufacturer</span> <br/>{selectedItem.manufacturer}</div>
+              <div><span className="font-semibold">Category</span> <br/> {selectedItem.category}</div>
+              <div><span className="font-semibold">Dosage</span> <br/> {selectedItem.dosage}</div>
+              <div><span className="font-semibold">Quantity</span><br/>{selectedItem.quantity}</div>
+              <div><span className="font-semibold">Unit</span> <br/>{selectedItem.unit}</div>
+              <div><span className="font-semibold">Selling Price</span> <br/>{selectedItem.sellingPrice}</div>
             </div>
           )}
           {selectedItem && editMode && (
-            <div className="space-y-4 py-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
                 <Input value={editData.name} onChange={e => setEditData({ ...editData, name: e.target.value })} />
@@ -264,6 +269,10 @@ export default function AdminInventoryPage() {
                 <label className="block text-sm font-medium mb-1">Unit</label>
                 <Input value={editData.unit} onChange={e => setEditData({ ...editData, unit: e.target.value })} />
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Selling Price</label>
+                <Input type="number" value={editData.sellingPrice} onChange={e => setEditData({ ...editData, sellingPrice: Number(e.target.value) })} />
+              </div>
             </div>
           )}
           <DialogFooter className="flex flex-col gap-2 mt-4">
@@ -283,36 +292,42 @@ export default function AdminInventoryPage() {
       </Dialog>
       {/* Create Inventory Modal */}
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-        <DialogContent className="max-w-md bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl">
+        <DialogContent className="max-w-lg bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
               + Add Inventory
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
-              <Input value={createData.name} onChange={e => setCreateData({ ...createData, name: e.target.value })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Manufacturer</label>
-              <Input value={createData.manufacturer} onChange={e => setCreateData({ ...createData, manufacturer: e.target.value })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Category</label>
-              <Input value={createData.category} onChange={e => setCreateData({ ...createData, category: e.target.value })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Dosage</label>
-              <Input value={createData.dosage} onChange={e => setCreateData({ ...createData, dosage: e.target.value })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Quantity</label>
-              <Input type="number" value={createData.quantity} onChange={e => setCreateData({ ...createData, quantity: Number(e.target.value) })} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Unit</label>
-              <Input value={createData.unit} onChange={e => setCreateData({ ...createData, unit: e.target.value })} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <Input value={createData.name} onChange={e => setCreateData({ ...createData, name: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Manufacturer</label>
+                <Input value={createData.manufacturer} onChange={e => setCreateData({ ...createData, manufacturer: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Category</label>
+                <Input value={createData.category} onChange={e => setCreateData({ ...createData, category: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Dosage</label>
+                <Input value={createData.dosage} onChange={e => setCreateData({ ...createData, dosage: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Quantity</label>
+                <Input type="number" value={createData.quantity} onChange={e => setCreateData({ ...createData, quantity: Number(e.target.value) })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Unit</label>
+                <Input value={createData.unit} onChange={e => setCreateData({ ...createData, unit: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Selling Price</label>
+                <Input type="number" value={createData.sellingPrice} onChange={e => setCreateData({ ...createData, sellingPrice: Number(e.target.value) })} />
+              </div>
             </div>
           </div>
           <DialogFooter className="flex flex-col gap-2 mt-4">
