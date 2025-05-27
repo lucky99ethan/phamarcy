@@ -17,11 +17,11 @@ export default function AdminInventoryPage() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState({ name: "", manufacturer: "", category: "", dosage: "", quantity: 0, unit: "", sellingPrice: 0 });
+  const [editData, setEditData] = useState({ name: "", manufacturer: "", category: "", dosage: "", quantity: 0, unit: "", buyingPrice: 0 });
 
   // Create inventory state
   const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [createData, setCreateData] = useState({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
+  const [createData, setCreateData] = useState({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', buyingPrice: 0 });
   const [creating, setCreating] = useState(false);
 
   // Pagination state
@@ -52,7 +52,7 @@ export default function AdminInventoryPage() {
       dosage: item.dosage,
       quantity: item.quantity,
       unit: item.unit,
-      sellingPrice: item.sellingPrice
+      buyingPrice: item.buyingPrice
     });
     setEditMode(false);
     setModalOpen(true);
@@ -68,7 +68,7 @@ export default function AdminInventoryPage() {
       dosage: selectedItem.dosage,
       quantity: selectedItem.quantity,
       unit: selectedItem.unit,
-      sellingPrice: selectedItem.sellingPrice
+      buyingPrice: selectedItem.buyingPrice
     });
   };
   const handleSaveEdit = async () => {
@@ -105,13 +105,13 @@ export default function AdminInventoryPage() {
   };
 
   const handleOpenCreate = () => {
-    setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
+    setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', buyingPrice: 0 });
     setCreateModalOpen(true);
   };
 
   useEffect(() => {
     if (!createModalOpen) {
-      setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 });
+      setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', buyingPrice: 0 });
     }
   }, [createModalOpen]);
 
@@ -125,7 +125,7 @@ export default function AdminInventoryPage() {
         setItems(prev => [...prev, res.data.item || dataWithId]);
         toast({ title: 'Inventory created!', variant: 'default' });
         setCreateModalOpen(false); // Close modal
-        setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', sellingPrice: 0 }); // Clear form
+        setCreateData({ name: '', manufacturer: '', category: '', dosage: '', quantity: 0, unit: '', buyingPrice: 0 }); // Clear form
       } else {
         throw new Error('Create failed');
       }
@@ -173,7 +173,7 @@ export default function AdminInventoryPage() {
               <TableHead className="text-blue-700 font-bold">Dosage</TableHead>
               <TableHead className="text-blue-700 font-bold">Quantity</TableHead>
               <TableHead className="text-blue-700 font-bold">Unit</TableHead>
-              <TableHead className="text-blue-700 font-bold">Selling Price</TableHead>
+              <TableHead className="text-blue-700 font-bold">Buying Price</TableHead>
               <TableHead className="text-right text-blue-700 font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -192,7 +192,7 @@ export default function AdminInventoryPage() {
                   <TableCell className="text-gray-600">{item.dosage}</TableCell>
                   <TableCell className="text-gray-600">{item.quantity}</TableCell>
                   <TableCell className="text-gray-600">{item.unit}</TableCell>
-                  <TableCell className="text-gray-600">{item.sellingPrice}</TableCell>
+                  <TableCell className="text-gray-600">{item.buyingPrice}</TableCell>
                   <TableCell className="text-right">
                     <Button size="sm" variant="outline" className="mr-2 border-blue-200 group-hover:border-blue-400" onClick={() => handleReview(item)}>Review</Button>
                   </TableCell>
@@ -240,7 +240,7 @@ export default function AdminInventoryPage() {
               <div><span className="font-semibold">Dosage</span> <br/> {selectedItem.dosage}</div>
               <div><span className="font-semibold">Quantity</span><br/>{selectedItem.quantity}</div>
               <div><span className="font-semibold">Unit</span> <br/>{selectedItem.unit}</div>
-              <div><span className="font-semibold">Selling Price</span> <br/>{selectedItem.sellingPrice}</div>
+              <div><span className="font-semibold">Buying Price</span> <br/>{selectedItem.buyingPrice}</div>
             </div>
           )}
           {selectedItem && editMode && (
@@ -270,8 +270,8 @@ export default function AdminInventoryPage() {
                 <Input value={editData.unit} onChange={e => setEditData({ ...editData, unit: e.target.value })} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Selling Price</label>
-                <Input type="number" value={editData.sellingPrice} onChange={e => setEditData({ ...editData, sellingPrice: Number(e.target.value) })} />
+                <label className="block text-sm font-medium mb-1">Buying Price</label>
+                <Input type="number" value={editData.buyingPrice} onChange={e => setEditData({ ...editData, buyingPrice: Number(e.target.value) })} />
               </div>
             </div>
           )}
@@ -325,8 +325,8 @@ export default function AdminInventoryPage() {
                 <Input value={createData.unit} onChange={e => setCreateData({ ...createData, unit: e.target.value })} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Selling Price</label>
-                <Input type="number" value={createData.sellingPrice} onChange={e => setCreateData({ ...createData, sellingPrice: Number(e.target.value) })} />
+                <label className="block text-sm font-medium mb-1">Buying Price</label>
+                <Input type="number" value={createData.buyingPrice} onChange={e => setCreateData({ ...createData, buyingPrice: Number(e.target.value) })} />
               </div>
             </div>
           </div>
