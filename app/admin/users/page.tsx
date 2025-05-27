@@ -18,6 +18,11 @@ export default function AdminUsersPage() {
   const [editMode, setEditMode] = useState(false)
   const [editData, setEditData] = useState({ name: "", email: "", role: "" })
 
+  // Create user state
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [createData, setCreateData] = useState({ name: '', email: '', role: '', password: '' });
+  const [creating, setCreating] = useState(false);
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
@@ -68,21 +73,55 @@ export default function AdminUsersPage() {
       toast({ title: "Failed to update user", description: err instanceof Error ? err.message : String(err), variant: "destructive" })
     }
   }
-const handleDelete = async () => {
-  try {
-    const userId = selectedUser._id || selectedUser.id;
-    const res = await axios.delete(`http://localhost:3000/api/user/${userId}`);
-    if (res.data && (res.data.success || res.status === 200)) {
-      setUsers(users.filter(u => (u._id || u.id) !== userId));
-      setModalOpen(false);
-      toast({ title: "User deleted!", variant: "destructive" });
-    } else {
-      throw new Error("Delete failed");
+  const handleDelete = async () => {
+    try {
+      const userId = selectedUser._id || selectedUser.id;
+      const res = await axios.delete(`http://localhost:3000/api/user/${userId}`);
+      if (res.data && (res.data.success || res.status === 200)) {
+        setUsers(users.filter(u => (u._id || u.id) !== userId));
+        setModalOpen(false);
+        toast({ title: "User deleted!", variant: "destructive" });
+      } else {
+        throw new Error("Delete failed");
+      }
+    } catch (err) {
+      toast({ title: "Failed to delete user", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
     }
-  } catch (err) {
-    toast({ title: "Failed to delete user", description: err instanceof Error ? err.message : String(err), variant: "destructive" });
-  }
-};
+  };
+
+  const handleOpenCreate = () => {
+    setCreateData({ name: '', email: '', role: '', password: '' });
+    setCreateModalOpen(true);
+  };
+
+  // Reset createData when modal closes
+  useEffect(() => {
+    if (!createModalOpen) {
+      setCreateData({ name: '', email: '', role: '', password: '' });
+    }
+  }, [createModalOpen]);
+
+  const handleCreateUser = async () => {
+    setCreating(true);
+    try {
+      const res = await axios.post('http://localhost:3000/api/auth/register', createData);
+         window.location.reload(); // Refresh the page
+  
+      if (res.data && (res.data.success || res.status === 200)) {
+        setUsers(prev => [...prev, res.data.user || createData]);
+        toast({ title: 'User created!', variant: 'default' });
+        setCreateModalOpen(false); // Close modal immediately on success
+        setCreateData({ name: '', email: '', role: '', password: '' }); // Clear inputs
+        window.location.reload(); // Refresh the page
+      } else {
+        throw new Error('Create failed');
+      }
+    } catch (err) {
+      toast({ title: 'Failed to create user', description: err instanceof Error ? err.message : String(err), variant: 'destructive' });
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="">
@@ -95,11 +134,12 @@ const handleDelete = async () => {
             </h2>
             <p className="text-muted-foreground mt-2 text-lg">Manage all users with ease and control.</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <div className="bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-2xl px-8 py-4 flex flex-col items-center shadow-xl">
               <span className="text-xs font-medium opacity-80">Total Users</span>
               <span className="text-2xl font-bold mt-1 flex items-center gap-1"><Users className="h-5 w-5" />{users.length}</span>
             </div>
+
           </div>
         </div>
       </div>
@@ -107,6 +147,9 @@ const handleDelete = async () => {
       <div className="max-w-9xl mx-auto bg-white/90 rounded-3xl shadow-2xl p-8 relative">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
           <Input placeholder="Filter by name..." value={filter} onChange={e => setFilter(e.target.value)} className="max-w-xs border-2 border-blue-200 focus:border-blue-400" />
+          <Button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold" onClick={handleOpenCreate}>
+            <UserPlus className="h-5 w-5 mr-2" /> Add User
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -146,7 +189,7 @@ const handleDelete = async () => {
               disabled={currentPage === 1}
               className="px-4 py-2 rounded-full font-bold bg-gradient-to-r from-blue-400 to-blue-400 text-white disabled:opacity-50"
             >
-              &larr; Previous
+              &larr;
             </Button>
             <span className="font-semibold text-blue-700">
               Page {currentPage} of {totalPages}
@@ -156,7 +199,7 @@ const handleDelete = async () => {
               disabled={currentPage === totalPages}
               className="px-4 py-2 rounded-full font-bold bg-gradient-to-r from-blue-400 to-blue-400 text-white disabled:opacity-50"
             >
-              Next &rarr;
+              &rarr;
             </Button>
           </div>
         )}
@@ -204,6 +247,40 @@ const handleDelete = async () => {
                 <Button className="flex-1" variant="outline" onClick={handleCancelEdit}>Cancel</Button>
               </div>
             )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Create User Modal */}
+      <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
+        <DialogContent className="max-w-md bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-2xl shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <UserPlus className="h-6 w-6 text-blue-500" /> Create User
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <label className="block text-sm font-medium mb-1">Name</label>
+              <Input value={createData.name} onChange={e => setCreateData({ ...createData, name: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Email</label>
+              <Input value={createData.email} onChange={e => setCreateData({ ...createData, email: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Role</label>
+              <Input value={createData.role} onChange={e => setCreateData({ ...createData, role: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Password</label>
+              <Input type="password" value={createData.password || ''} onChange={e => setCreateData({ ...createData, password: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter className="flex flex-col gap-2 mt-4">
+            <Button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold" onClick={handleCreateUser} disabled={creating}>
+              {creating ? 'Creating...' : 'Create'}
+            </Button>
+            <Button className="" variant="outline" onClick={() => setCreateModalOpen(false)} disabled={creating}>Cancel</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
