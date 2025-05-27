@@ -23,7 +23,7 @@ export default function AdminSidebar() {
         <div className="mt-3 text-xl font-bold text-primary">Admin</div>
         <div className="text-xs text-muted-foreground">admin@pharmacy.com</div>
       </div>
-      <div className="mb-8 text-2xl font-extrabold text-primary text-center tracking-tight drop-shadow">Admin Panel</div>
+
       <nav className="flex flex-col gap-2">
         {navItems.map((item) => (
           <Link
